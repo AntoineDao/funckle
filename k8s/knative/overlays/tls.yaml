@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-network
+  namespace: knative-serving
+data:
+  certificate-class: net-http01.certificate.networking.knative.dev
+  auto-tls: Enabled
+  default-external-scheme: "https"
+  domain-template: '{{if index .Annotations "subdomain" }}{{ index .Annotations "subdomain"}}{{else}}{{.Name}}.{{.Namespace}}{{end}}.{{.Domain}}'

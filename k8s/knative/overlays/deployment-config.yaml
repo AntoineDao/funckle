@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-deployment
+  namespace: knative-serving
+data:
+  queue-sidecar-cpu-request: "25m"
+  queue-sidecar-cpu-limit: "50m"
+  queue-sidecar-memory-request: "200Mi"
+  queue-sidecar-memory-limit: "200Mi"

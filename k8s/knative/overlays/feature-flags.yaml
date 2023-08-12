@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-features
+  namespace: knative-serving
+data:
+  multi-container: "enabled"
+  kubernetes.podspec-tolerations: "enabled"
+  kubernetes.podspec-affinity: "enabled"
+  kubernetes.podspec-nodeselector: "enabled"

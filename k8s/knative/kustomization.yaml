@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - https://github.com/knative/serving/releases/download/knative-v1.11.0/serving-core.yaml
+  - https://github.com/knative/net-kourier/releases/download/knative-v1.11.0/kourier.yaml
+  - https://github.com/knative/net-http01/releases/download/knative-v1.11.0/release.yaml
+
+patchesStrategicMerge:
+  - overlays/kourier.yaml
+  - overlays/tls.yaml
+  - overlays/garbage-collection.yaml
+  - overlays/autoscaler-config.yaml
+  - overlays/defaults-config.yaml
+  - overlays/deployment-config.yaml
+  - overlays/feature-flags.yaml

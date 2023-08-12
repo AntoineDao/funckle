@@ -1,0 +1,102 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  labels:
+  annotations:
+  name: func-build-and-deploy
+spec:
+  params:
+    - name: function-name
+      description: Name of the function to be created
+      default: ""
+    - name: function-namespace
+      description: Namespace of the function to be created
+      default: ""
+    - default: '' # gs://my-bucket/my-function.tar.gz
+      description: GCS gzipped tarball path to build
+      name: gcsPath
+      type: string
+    - default: ''
+      description: Path where the function project is
+      name: contextDir
+      type: string
+    - description: Function image name
+      name: imageName
+      type: string
+    - description: The registry associated with the function image
+      name: registry
+      type: string
+    - description: Builder image to be used
+      name: builderImage
+      type: string
+    - description: Environment variables to set during build time
+      name: buildEnvs
+      type: array
+  tasks:
+    - name: download
+      taskRef:
+        name: gcs-download
+      params:
+        - name: path
+          value: $(params.contextDir)
+        - name: location
+          value: $(params.gcsPath)
+        - name: typeDir
+          value: "false"
+        - name: unzipToDir
+          value: "true"
+      workspaces:
+        - name: output
+          workspace: source-workspace
+        - name: credentials
+          workspace: gcp-credentials
+    - name: build
+      params:
+        - name: APP_IMAGE
+          value: $(params.imageName)
+        - name: REGISTRY
+          value: $(params.registry)
+        - name: SOURCE_SUBPATH
+          value: $(params.contextDir)
+        - name: BUILDER_IMAGE
+          value: $(params.builderImage)
+        - name: ENV_VARS
+          value:
+            - '$(params.buildEnvs[*])'
+      runAfter:
+        - download
+      taskRef:
+        name: func-buildpacks
+      workspaces:
+        - name: source
+          workspace: source-workspace
+        - name: cache
+          workspace: cache-workspace
+        - name: dockerconfig
+          workspace: dockerconfig-workspace
+    - name: deploy
+      params:
+        - name: name
+          value: $(params.function-name)
+        - name: namespace
+          value: $(params.function-namespace)
+        - name: image
+          value: $(params.registry)/$(params.imageName)@$(tasks.build.results.IMAGE_DIGEST)
+      runAfter:
+        - build
+      taskRef:
+        name: func-deploy
+      workspaces:
+        - name: source
+          workspace: source-workspace
+  workspaces:
+    - description: Directory where function source is located.
+      name: source-workspace
+    - description: Directory where build cache is stored.
+      name: cache-workspace
+    - description: Directory containing image registry credentials stored in config.json file.
+      name: dockerconfig-workspace
+      optional: true
+    - description: Directory containing GCP credentials stored in config.json file. Should be mounted at `service_account.json`
+      name: gcp-credentials
+      optional: true
