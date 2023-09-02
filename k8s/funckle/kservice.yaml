@@ -1,0 +1,98 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: funckle
+  namespace: funckle
+  annotations:
+    subdomain: app
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "1"
+    spec:
+      serviceAccountName: funckle-server
+      imagePullSecrets:
+        - name:  artifact-registry-secret
+      containers:
+        - image: europe-west2-docker.pkg.dev/hack-space-dev/funckle-user-functions/funckle
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          env:
+            - name: DATABASE_ENGINE
+              value: postgresql
+            - name: DATABASE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres
+                  key: POSTGRES_USER
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres
+                  key: POSTGRES_DB
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: POSTGRES_PASSWORD
+            - name: DATABASE_HOST
+              value: postgres-service
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: KUBE_CONFIG
+              value: in-cluster
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name:  funckle-server
+  namespace: funckle
+  annotations:
+    iam.gke.io/gcp-service-account: funckle-server@hack-space-dev.iam.gserviceaccount.com
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: funckle
+rules:
+  - apiGroups:
+      - tekton.dev
+    resources:
+      - pipelines
+      - pipelineruns
+    verbs: ["*"]
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - serviceaccounts
+      - secrets
+      - configmaps
+    verbs: ["*"]
+  - apiGroups:
+      - serving.knative.dev
+    resources:
+      - services
+    verbs: ["*"]
+  - apiGroups:
+      - ""
+    resources:
+    - pods
+    - pods/log
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: funckle
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: funckle
+subjects:
+- kind: ServiceAccount
+  name: funckle-server
+  namespace: funckle

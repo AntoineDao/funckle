@@ -8,3 +8,11 @@ data:
   auto-tls: Enabled
   default-external-scheme: "https"
   domain-template: '{{if index .Annotations "subdomain" }}{{ index .Annotations "subdomain"}}{{else}}{{.Name}}.{{.Namespace}}{{end}}.{{.Domain}}'
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-domain
+  namespace: knative-serving
+data:
+  funckle.nerd-extraordinaire.com: ""

@@ -3,4 +3,8 @@ kind: Kustomization
 
 resources:
   - https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
-  - https://storage.googleapis.com/tekton-releases/dashboard/latest/release-full.yaml
+  - dashboard.yaml
+
+patchesStrategicMerge:
+  - namespace.yaml
+  - config.yaml

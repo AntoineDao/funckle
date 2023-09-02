@@ -9,9 +9,9 @@ spec:
     - name: function-name
       description: Name of the function to be created
       default: ""
-    - name: function-namespace
-      description: Namespace of the function to be created
-      default: ""
+    # - name: function-namespace
+    #   description: Namespace of the function to be created
+    #   default: ""
     - default: '' # gs://my-bucket/my-function.tar.gz
       description: GCS gzipped tarball path to build
       name: gcsPath
@@ -74,21 +74,21 @@ spec:
           workspace: cache-workspace
         - name: dockerconfig
           workspace: dockerconfig-workspace
-    - name: deploy
-      params:
-        - name: name
-          value: $(params.function-name)
-        - name: namespace
-          value: $(params.function-namespace)
-        - name: image
-          value: $(params.registry)/$(params.imageName)@$(tasks.build.results.IMAGE_DIGEST)
-      runAfter:
-        - build
-      taskRef:
-        name: func-deploy
-      workspaces:
-        - name: source
-          workspace: source-workspace
+    # - name: deploy
+    #   params:
+    #     - name: name
+    #       value: $(params.function-name)
+    #     - name: namespace
+    #       value: $(params.function-namespace)
+    #     - name: image
+    #       value: $(params.registry)/$(params.imageName)@$(tasks.build.results.IMAGE_DIGEST)
+    #   runAfter:
+    #     - build
+    #   taskRef:
+    #     name: func-deploy
+    #   workspaces:
+    #     - name: source
+    #       workspace: source-workspace
   workspaces:
     - description: Directory where function source is located.
       name: source-workspace

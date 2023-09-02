@@ -8,7 +8,7 @@ resources:
 
 patchesStrategicMerge:
   - overlays/kourier.yaml
-  - overlays/tls.yaml
+  - overlays/config-network.yaml
   - overlays/garbage-collection.yaml
   - overlays/autoscaler-config.yaml
   - overlays/defaults-config.yaml
