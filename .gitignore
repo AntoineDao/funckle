@@ -1,2 +1,6 @@
 secrets/*
 .terraform
+build
+db.sqlite3
+dist
+.venv

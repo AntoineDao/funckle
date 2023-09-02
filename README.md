@@ -21,6 +21,12 @@ This repository contains infrastructure as code for deploying a Speckle Function
 │   ├── functions # Contains sample Speckle Functions
 ```
 
+## Django Server
+
+### Resources
+* [Django Kubernetes Manager](https://django-kubernetes-manager.readthedocs.io/en/latest/getting_started.html)
+* 
+
 ## Additional Resources
 
 ### Docker Credentials Creation
@@ -37,3 +43,8 @@ kubectl create secret docker-registry regcred --docker-server=https://europe-wes
 #### References
 * [Google Auth source](https://cloud.google.com/artifact-registry/docs/docker/authentication#linux-macos)
 * [Kubernetes secret source](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#:~:text=A%20Kubernetes%20cluster%20uses%20the,to%20pull%20a%20private%20image.&text=If%20you%20need%20more%20control,the%20Secret%20before%20storing%20it.)
+
+
+### RANDOM
+
+* Slack Webhook URL: https://hooks.slack.com/services/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
