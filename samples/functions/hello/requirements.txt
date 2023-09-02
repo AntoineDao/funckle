@@ -1,1 +1,1 @@
-functions-framework==3.*
+funckle>=0.1.4

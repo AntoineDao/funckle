@@ -1,0 +1,2 @@
+funckle>=0.1.4
+slack-sdk==3.21.3

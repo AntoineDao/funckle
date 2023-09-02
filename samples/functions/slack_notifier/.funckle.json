@@ -1,0 +1,5 @@
+{
+    "name": "Slack Notifier",
+    "description": "A function that routes Speckle webhooks to Slack",
+    "sourceLocation": "https://somewhere.com"
+}
