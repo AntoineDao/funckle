@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "funckle"
+version = "0.1.4"
+description = ""
+authors = ["antoinedao <antoinedao1@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+click = "^8.1.7"
+typer = {extras = ["all"], version = "^0.9.0"}
+pydantic-settings = "^2.0.3"
+requests = "^2.31.0"
+cookiecutter = "^2.3.0"
+gql = {extras = ["all"], version = "^3.4.1"}
+flask = "^2.3.2"
+specklepy = "^2.16.0"
+functions-framework = ">=3.0.0,<4.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+funckle = "funckle.cli:app"
